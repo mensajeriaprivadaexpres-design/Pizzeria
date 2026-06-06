@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="ROCKSpizza - Hidden Kitchen Experience">
+    <title>ROCKSpizza - Hidden Kitchen Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+        }
+        a, button, input, textarea, [onclick] {
+            -webkit-user-select: auto !important; -moz-user-select: auto !important; -ms-user-select: auto !important; user-select: auto !important; pointer-events: auto !important; cursor: pointer;
+        }
+        input, textarea { cursor: text !important; }
+
+        /* Header */
+        .header { text-align: center; padding: 40px 20px; background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%); border-bottom: 2px solid #ff0033; box-shadow: 0 0 30px rgba(255, 0, 51, 0.3); position: relative; }
+        .logo { font-size: 4rem; font-weight: 900; letter-spacing: 8px; margin-bottom: 10px; text-shadow: 0 0 20px #ff0033, 0 0 40px #ff0033, 0 0 60px #ff0033; animation: glow 2s ease-in-out infinite alternate; }
+        @keyframes glow { from { text-shadow: 0 0 20px #ff0033, 0 0 30px #ff0033; } to { text-shadow: 0 0 30px #ff0033, 0 0 50px #ff0033, 0 0 70px #ff0033; } }
+        .tagline { font-size: 0.9rem; color: #888; letter-spacing: 4px; text-transform: uppercase; }
+
+        /* Spotify */
+        .spotify-section { background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%); padding: 40px 20px; text-align: center; border-bottom: 2px solid #1DB954; }
+        .spotify-link { display: inline-block; text-decoration: none; transition: all 0.3s ease; }
+        .spotify-link:hover { transform: scale(1.1); }
+        .spotify-link:active { transform: scale(0.95); }
+        .spotify-icon { font-size: 7rem; color: #1DB954; filter: drop-shadow(0 0 30px rgba(29, 185, 84, 1)); display: block; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(29, 185, 84, 1)); } 50% { transform: scale(1.1); filter: drop-shadow(0 0 50px rgba(29, 185, 84, 1.5)); } }
+        .spotify-text { 
+            font-size: 1.4rem; 
+            color: #ffffff; 
+            font-weight: 600; 
+            letter-spacing: 1px;
+            margin-top: 15px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: textGlow 2s ease-in-out infinite;
+        }
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.8); }
+        }
+
+        /* Status Bar */
+        .status-bar { background: #0a0a0a; padding: 15px; text-align: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100; }
+        .status-btn { background: #00ff00; color: #000; border: none; padding: 10px 30px; font-weight: 700; font-size: 0.9rem; cursor: pointer; border-radius: 25px; box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); font-family: 'Montserrat', sans-serif; }
+        .status-btn.closed { background: #ff0033; color: #fff; box-shadow: 0 0 20px rgba(255, 0, 51, 0.5); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        /* Pizza del Mes */
+        .pizza-del-month { background: linear-gradient(135deg, #1a0000 0%, #0a0a0a 100%); border: 2px solid #ff0033; border-radius: 20px; padding: 40px; margin: 40px 20px; text-align: center; box-shadow: 0 0 40px rgba(255, 0, 51, 0.3); position: relative; overflow: hidden; }
+        .pizza-del-month::before { content: '🏆 PIZZA DEL MES'; position: absolute; top: 10px; right: -35px; background: #ff0033; color: #fff; padding: 5px 40px; transform: rotate(45deg); font-weight: 700; font-size: 0.8rem; }
+        .pizza-del-month h2 { color: #ff0033; font-size: 2rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 3px; }
+        .pizza-del-month img { max-width: 100%; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 40px rgba(255, 0, 51, 0.4); }
+        .pizza-del-month .price { font-size: 2.5rem; color: #fff; font-weight: 900; margin: 20px 0; }
+        .pizza-del-month .price span { color: #ff0033; font-size: 1.2rem; }
+        .pizza-servings { color: #ffd700; font-size: 1rem; font-weight: 600; margin-top: 10px; display: block; }
+
+        /* Pizzas Grid */
+        .pizzas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; margin: 40px 0; }
+        .pizza-card { background: linear-gradient(145deg, #0a0a0a, #111); border: 1px solid #222; border-radius: 20px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 10px 40px rgba(255, 0, 51, 0.1); }
+        .pizza-card:hover { transform: translateY(-10px); border-color: #ff0033; box-shadow: 0 20px 60px rgba(255, 0, 51, 0.3); }
+        .pizza-image { width: 100%; height: 350px; object-fit: cover; border-bottom: 2px solid #ff0033; }
+        .pizza-info { padding: 30px; }
+        .pizza-name { font-size: 1.8rem; font-weight: 700; margin-bottom: 15px; color: #ff0033; text-transform: uppercase; letter-spacing: 2px; }
+        .pizza-ingredients { color: #aaa; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; }
+        .pizza-price { font-size: 2rem; font-weight: 900; color: #fff; margin-bottom: 20px; }
+        .pizza-price span { color: #ff0033; }
+        .buy-btn { width: 100%; background: linear-gradient(135deg, #ff0033, #cc0022); color: #fff; border: none; padding: 18px; font-size: 1.1rem; font-weight: 700; cursor: pointer; border-radius: 10px; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s ease; font-family: 'Montserrat', sans-serif; }
+        .buy-btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(255, 0, 51, 0.5); }
+
+        /* Tracking */
+        .tracking-section { background: linear-gradient(145deg, #0a0a0a, #111); border: 2px solid #ff0033; border-radius: 20px; padding: 25px; margin: 40px auto; max-width: 600px; }
+        .tracking-section h2 { text-align: center; color: #ff0033; margin-bottom: 20px; font-size: 1.5rem; text-transform: uppercase; }
+        .tracking-form { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tracking-form input { flex: 1; min-width: 150px; padding: 12px; background: #000; border: 1px solid #333; border-radius: 10px; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; }
+        .tracking-form input:focus { outline: none; border-color: #ff0033; }
+        .track-btn { background: #ff0033; color: #fff; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: 700; font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size: 0.9rem; }
+        .tracking-status { display: none; padding: 20px; background: #000; border-radius: 15px; text-align: center; }
+        .status-step { display: flex; align-items: center; justify-content: center; margin: 15px 0; gap: 15px; flex-wrap: wrap; }
+        .status-icon { width: 45px; height: 45px; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #666; transition: all 0.3s ease; }
+        .status-icon.active { background: #00ff00; color: #000; box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); }
+        .status-icon.completed { background: #ff0033; color: #fff; }
+
+        /* Actions */
+        .actions { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin: 60px 0; }
+        .action-btn { background: transparent; border: 2px solid #ff0033; color: #fff; padding: 15px 35px; font-size: 1rem; font-weight: 600; cursor: pointer; border-radius: 30px; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; }
+        .action-btn:hover { background: #ff0033; box-shadow: 0 0 30px rgba(255, 0, 51, 0.6); transform: translateY(-3px); }
+        .action-btn.whatsapp { border-color: #25D366; }
+        .action-btn.whatsapp:hover { background: #25D366; box-shadow: 0 0 30px rgba(37, 211, 102, 0.6); }
+
+        /* Reviews */
+        .reviews-section { margin: 80px 0; padding: 40px; background: linear-gradient(145deg, #0a0a0a, #111); border-radius: 20px; border: 1px solid #222; }
+        .reviews-title { font-size: 2rem; text-align: center; margin-bottom: 40px; color: #ff0033; text-transform: uppercase; letter-spacing: 3px; }
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .review-card { background: #000; padding: 30px; border-radius: 15px; border-left: 4px solid #ff0033; position: relative; }
+        .review-card::before { content: '"'; font-size: 4rem; color: #ff0033; opacity: 0.3; position: absolute; top: 10px; left: 20px; }
+        .review-text { font-style: italic; color: #ccc; line-height: 1.6; margin-bottom: 15px; position: relative; z-index: 1; }
+        .reviewer-name { color: #ff0033; font-weight: 700; font-size: 0.9rem; }
+        .review-stars { color: #ffd700; margin-bottom: 10px; }
+
+        /* Chatbot SIN INPUT */
+        .chatbot-btn { position: fixed; bottom: 30px; right: 30px; width: 70px; height: 70px; background: linear-gradient(135deg, #ff0033, #cc0022); border: none; border-radius: 50%; color: #fff; font-size: 2rem; cursor: pointer; box-shadow: 0 5px 30px rgba(255, 0, 51, 0.7); transition: all 0.3s ease; z-index: 999; display: flex; align-items: center; justify-content: center; animation: bounce 2s infinite; }
+        .chatbot-btn:hover { transform: scale(1.15); box-shadow: 0 8px 40px rgba(255, 0, 51, 0.9); }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .chatbot-window { position: fixed; bottom: 110px; right: 30px; width: 500px; max-width: 90vw; height: 600px; max-height: 80vh; background: linear-gradient(145deg, #1a1a1a, #0a0a0a); border: 3px solid #ff0033; border-radius: 25px; box-shadow: 0 20px 60px rgba(255, 0, 51, 0.6); display: none; flex-direction: column; z-index: 1000; overflow: hidden; }
+        .chatbot-header { background: linear-gradient(135deg, #ff0033, #cc0022); padding: 25px; text-align: center; font-weight: 700; font-size: 1.3rem; border-bottom: 2px solid rgba(255,255,255,0.2); }
+        .chatbot-messages { flex: 1; padding: 25px; overflow-y: auto; background: #0a0a0a; }
+        .chat-message { margin: 15px 0; padding: 18px; border-radius: 15px; font-size: 1rem; line-height: 1.6; max-width: 85%; word-wrap: break-word; }
+        .chat-message.bot { background: linear-gradient(135deg, #2a2a2a, #1a1a1a); color: #fff; border-left: 4px solid #ff0033; margin-right: auto; box-shadow: 0 4px 15px rgba(255, 0, 51, 0.2); }
+        .chat-message.user { background: linear-gradient(135deg, #ff0033, #cc0022); color: #fff; text-align: left; margin-left: auto; box-shadow: 0 4px 15px rgba(255, 0, 51, 0.4); }
+        .chatbot-options { padding: 25px; display: flex; flex-wrap: wrap; gap: 12px; background: #111; border-top: 1px solid #222; }
+        .chat-option { background: transparent; border: 2px solid #ff0033; color: #fff; padding: 15px 25px; border-radius: 25px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; font-family: 'Montserrat', sans-serif; font-weight: 600; }
+        .chat-option:hover { background: #ff0033; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 0, 51, 0.4); }
+
+        /* CHATBOT POPUP MÁS GRANDE */
+        .chatbot-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .chatbot-popup {
+            background: linear-gradient(145deg, #1a0000 0%, #0a0a0a 50%, #1a0000 100%);
+            border: 4px solid #ff0033;
+            border-radius: 30px;
+            padding: 60px 50px;
+            max-width: 850px;
+            width: 95%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 100px rgba(255, 0, 51, 0.8), inset 0 0 60px rgba(255, 0, 51, 0.1);
+            animation: popupSlide 0.4s ease;
+        }
+        @keyframes popupSlide {
+            from { transform: translateY(50px) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .chatbot-popup::before {
+            content: '';
+            position: absolute;
+            top: -4px; left: -4px; right: -4px; bottom: -4px;
+            border-radius: 30px;
+            background: linear-gradient(45deg, #ff0033, #ff6600, #ff0033);
+            z-index: -1;
+            animation: borderGlow 3s linear infinite;
+            background-size: 200% 200%;
+        }
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .popup-icon {
+            font-size: 5rem;
+            text-align: center;
+            margin-bottom: 25px;
+            animation: bounce 1.5s infinite;
+        }
+
+        .popup-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #ff0033;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 35px;
+            text-shadow: 0 0 30px rgba(255, 0, 51, 0.8);
+        }
+
+        .popup-content {
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #ff0033;
+            border-radius: 20px;
+            padding: 40px;
+            font-size: 1.3rem;
+            line-height: 2;
+            color: #fff;
+            white-space: pre-wrap;
+            text-align: left;
+            box-shadow: inset 0 0 30px rgba(255, 0, 51, 0.3);
+        }
+
+        .popup-close {
+            display: block;
+            margin: 40px auto 0;
+            background: linear-gradient(135deg, #ff0033, #cc0022);
+            color: #fff;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 5px 25px rgba(255, 0, 51, 0.6);
+        }
+        .popup-close:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 35px rgba(255, 0, 51, 0.9);
+        }
+
+        /* Admin INVISIBLE */
+        .admin-panel { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 20px; 
+            z-index: 1000; 
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #111; padding: 40px; border-radius: 20px; border: 2px solid #ff0033; max-width: 500px; width: 90%; max-height: 85vh; overflow-y: auto; }
+        .modal-content h2 { color: #ff0033; margin-bottom: 30px; text-align: center; }
+        
+        .admin-option { margin: 20px 0; padding: 20px; background: #0a0a0a; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .toggle-switch { position: relative; width: 60px; height: 30px; background: #333; border-radius: 15px; cursor: pointer; transition: all 0.3s; }
+        .toggle-switch.active { background: #ff0033; }
+        .toggle-switch::after { content: ''; position: absolute; width: 26px; height: 26px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: all 0.3s; }
+        .toggle-switch.active::after { left: 32px; }
+        
+        .admin-btn-action { background: linear-gradient(135deg, #ff0033, #cc0022); color: #fff; border: none; padding: 15px; border-radius: 10px; cursor: pointer; font-weight: 700; font-family: 'Montserrat', sans-serif; width: 100%; margin: 10px 0; font-size: 1rem; transition: all 0.3s; }
+        .admin-btn-action:hover { transform: scale(1.02); box-shadow: 0 5px 20px rgba(255, 0, 51, 0.5); }
+        .admin-btn-action.secondary { background: #333; }
+        .admin-btn-action.edit-btn { background: linear-gradient(135deg, #1DB954, #1ed760); color: #000; }
+
+        .edit-pizza-form { background: #0a0a0a; border: 1px solid #333; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .edit-pizza-form h3 { color: #ffd700; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; color: #aaa; margin-bottom: 5px; font-size: 0.9rem; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; background: #000; border: 1px solid #333; border-radius: 8px; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #ff0033; }
+
+        /* Footer */
+        .footer { text-align: center; padding: 50px 20px; background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%); border-top: 2px solid #ff0033; }
+        .footer p { font-size: 1.3rem; color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3); margin: 15px 0; font-weight: 600; letter-spacing: 1px; }
+        .footer i { color: #ff0033; margin-right: 10px; }
+        .footer span { color: #ff0033; text-shadow: 0 0 10px rgba(255, 0, 51, 0.8); }
+        .footer-locations { font-size: 1.2rem; color: #fff; margin: 25px 0; font-weight: 600; font-style: italic; text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
+        .footer-designer { margin-top: 30px; font-size: 1.3rem; color: #fff; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+        .footer-copyright { margin-top: 20px; font-size: 1.1rem; color: #aaa; font-weight: 500; }
+
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .pizzas-grid { grid-template-columns: 1fr; }
+            .pizza-image { height: 250px; }
+            .chatbot-window { width: 95%; right: 2.5%; left: 2.5%; height: 70vh; }
+            .pizza-del-month { margin: 20px 10px; padding: 20px; }
+            .footer p { font-size: 1.1rem; }
+            .tracking-section { margin: 40px 10px; padding: 20px; }
+            .spotify-icon { font-size: 5rem; }
+            .spotify-text { font-size: 1.1rem; }
+            .chatbot-popup { padding: 40px 25px; }
+            .popup-content { font-size: 1.1rem; padding: 25px; }
+            .popup-title { font-size: 1.6rem; }
+            .popup-icon { font-size: 3.5rem; }
+        }
+
+        .notification { position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, #ff0033, #cc0022); color: #fff; padding: 20px 30px; border-radius: 10px; box-shadow: 0 5px 20px rgba(255, 0, 51, 0.5); display: none; z-index: 3000; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header" id="mainHeader">
+        <div class="logo">ROCKSpizza</div>
+        <div class="tagline">Hidden Kitchen Experience</div>
+    </header>
+
+    <!-- Spotify -->
+    <div class="spotify-section">
+        <a href="https://linktr.ee/omardejmejia" target="_blank" class="spotify-link" aria-label="Abrir Linktree con playlist de Spotify">
+            <i class="fab fa-spotify spotify-icon"></i>
+        </a>
+        <div class="spotify-text">Disfruta nuestras playlist mientras llega tu pizza</div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <button class="status-btn" id="statusBtn">
+            <i class="fas fa-fire"></i> ABIERTO HOY 4PM - 10PM
+        </button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Pizza del Mes -->
+        <div class="pizza-del-month" id="pizzaDelMes">
+            <h2><i class="fas fa-trophy"></i> Pizza del Mes</h2>
+            <p style="color: #aaa; margin-bottom: 20px;" id="mesDesc">Edición Especial Limitada - Solo este mes</p>
+            <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&q=80" alt="Pizza del Mes" id="mesImg" style="height: auto; max-height: 400px;">
+            <h3 style="color: #fff; font-size: 1.5rem; margin: 20px 0;" id="mesName">ROCKS Deluxe</h3>
+            <p style="color: #aaa; max-width: 600px; margin: 0 auto 20px;" id="mesIngredients">Triple queso mozzarella, pepperoni importado, jamón premium, champiñones frescos, pimientos asados, cebolla caramelizada, salsa especial de la casa y albahaca fresca. ¡Una explosión de sabores!</p>
+            <span class="pizza-servings">🍕 4 porciones</span>
+            <div class="price" id="mesPrice">$45.000 <span>COP</span></div>
+            <button class="buy-btn" onclick="orderPizza('ROCKS Deluxe')" style="max-width: 300px; margin: 0 auto;">
+                <i class="fab fa-whatsapp"></i> PEDIR AHORA
+            </button>
+        </div>
+
+        <!-- Pizzas Grid -->
+        <div class="pizzas-grid">
+            <div class="pizza-card" id="pizza1">
+                <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&q=80" alt="Pizza Pepperoni" class="pizza-image" id="p1Img">
+                <div class="pizza-info">
+                    <h3 class="pizza-name" id="p1Name">Pepperoni Rock</h3>
+                    <p class="pizza-ingredients" id="p1Ingredients">
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Doble pepperoni importado<br>
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Queso mozzarella premium<br>
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Salsa de la casa<br>
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Orégano fresco
+                    </p>
+                    <span class="pizza-servings">🍕 4 porciones</span>
+                    <div class="pizza-price" id="p1Price">$35.000 <span>COP</span></div>
+                    <button class="buy-btn" onclick="orderPizza('Pepperoni Rock')">
+                        <i class="fab fa-whatsapp"></i> PEDIR AHORA
+                    </button>
+                </div>
+            </div>
+
+            <div class="pizza-card" id="pizza2">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80" alt="Pizza Hawaiana" class="pizza-image" id="p2Img">
+                <div class="pizza-info">
+                    <h3 class="pizza-name" id="p2Name">Hawaiana VIP</h3>
+                    <p class="pizza-ingredients" id="p2Ingredients">
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Jamón premium<br>
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Piña caramelizada<br>
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Queso mozzarella<br>
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Toque de miel
+                    </p>
+                    <span class="pizza-servings">🍕 4 porciones</span>
+                    <div class="pizza-price" id="p2Price">$38.000 <span>COP</span></div>
+                    <button class="buy-btn" onclick="orderPizza('Hawaiana VIP')">
+                        <i class="fab fa-whatsapp"></i> PEDIR AHORA
+                    </button>
+                </div>
+            </div>
+
+            <div class="pizza-card" id="pizza3">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80" alt="Pizza Margarita" class="pizza-image" id="p3Img">
+                <div class="pizza-info">
+                    <h3 class="pizza-name" id="p3Name">Margarita Class</h3>
+                    <p class="pizza-ingredients" id="p3Ingredients">
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Tomate fresco<br>
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Mozzarella di bufala<br>
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Albahaca fresca<br>
+                        <i class="fas fa-check" style="color: #ff0033;"></i> Aceite de oliva extra virgen
+                    </p>
+                    <span class="pizza-servings">🍕 4 porciones</span>
+                    <div class="pizza-price" id="p3Price">$32.000 <span>COP</span></div>
+                    <button class="buy-btn" onclick="orderPizza('Margarita Class')">
+                        <i class="fab fa-whatsapp"></i> PEDIR AHORA
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Tracking -->
+        <div class="tracking-section">
+            <h2><i class="fas fa-shipping-fast"></i> Rastrea tu Pedido</h2>
+            <div class="tracking-form">
+                <input type="text" id="orderNumber" placeholder="Número de pedido">
+                <button class="track-btn" onclick="trackOrder()">
+                    <i class="fas fa-search"></i> RASTREAR
+                </button>
+            </div>
+            <div class="tracking-status" id="trackingStatus">
+                <h3 style="color: #ff0033; margin-bottom: 20px; font-size: 1.2rem;">Pedido #<span id="trackingNumber"></span></h3>
+                <div class="status-step">
+                    <div class="status-icon completed" id="step1"><i class="fas fa-check"></i></div>
+                    <div class="status-icon completed" id="step2"><i class="fas fa-fire"></i></div>
+                    <div class="status-icon" id="step3"><i class="fas fa-motorcycle"></i></div>
+                    <div class="status-icon" id="step4"><i class="fas fa-home"></i></div>
+                </div>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 15px; font-size: 0.85rem;">
+                    <span style="color: #00ff00;">Recibido</span>
+                    <span style="color: #00ff00;">En Preparación</span>
+                    <span style="color: #666;" id="text3">En Camino</span>
+                    <span style="color: #666;" id="text4">Entregado</span>
+                </div>
+                <p style="margin-top: 20px; color: #aaa; font-size: 0.9rem;" id="estimatedTime">Tiempo: 25-30 min</p>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="actions">
+            <a href="https://wa.me/573008150549?text=Hola!%20Necesito%20una%20asesoría%20sobre%20ROCKSpizza.%20¿Me%20puedes%20ayudar?" target="_blank" rel="noopener" class="action-btn whatsapp">
+                <i class="fab fa-whatsapp"></i> ASESORÍAS
+            </a>
+            <button type="button" class="action-btn" onclick="showReviews()">
+                <i class="fas fa-star"></i> VER RESEÑAS
+            </button>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section" id="reviewsSection" style="display: none;">
+            <h2 class="reviews-title"><i class="fas fa-fire"></i> Lo que dice la gente</h2>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">"Parce, estas pizzas están brutales. La de pepperoni es una locura, el queso se estira que da gusto. Ya pedí como 5 veces este mes, no me canso. 100% recomendadas."</p>
+                    <div class="reviewer-name">- Sebastián M.</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">"Uy qué chimba de pizza, la hawaiana es mi favorita. El balance entre el jamón y la piña está perfecto. Además la música que ponen en el Spotify le da un ambiente muy bacano. ¡Súper recomendado!"</p>
+                    <div class="reviewer-name">- Valentina R.</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">"Hermano, la margarita es otra cosa. Se nota que usan ingredientes de calidad, la masa es una delicia y el toque de albahaca fresca la hace única. Ya somos varios enganchados con ROCKSpizza."</p>
+                    <div class="reviewer-name">- Andrés F.</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                    <p class="review-text">"Me encanta que sea solo para el edificio, se siente como un servicio exclusivo. La pizza llega súper caliente y el sabor es increíble. La de pepperoni es mi vicio."</p>
+                    <div class="reviewer-name">- Daniela L.</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">"Qué buena idea tener una pizzería aquí mismo. La calidad es top, el servicio es rápido y el precio está muy bien. Además el detalle de la playlist en Spotify le da un plus. ¡Felicitaciones!"</p>
+                    <div class="reviewer-name">- Camilo G.</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">"Literalmente la mejor pizza que he probado en Medellín. La masa es perfecta, crujiente por fuera y suave por dentro. Ya le conté a todos mis amigos. Esto es oro puro."</p>
+                    <div class="reviewer-name">- Mariana S.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p><i class="fas fa-clock"></i> Servicio: 4:00 PM - 10:00 PM | Todos los días</p>
+        <p>Hecho con <span>❤</span> en Medellín</p>
+        <p class="footer-locations"><i class="fas fa-map-marker-alt"></i> Pizza solo en:<br>Mirador de Búcaros, Colina de Búcaros y Reserva de Búcaros</p>
+        <div class="footer-designer">Design OMARDEJMEJIA</div>
+        <p class="footer-copyright">&copy; 2026 ROCKSpizza. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Chatbot SIN INPUT -->
+    <button class="chatbot-btn" onclick="toggleChatbot()" type="button"><i class="fas fa-robot"></i></button>
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header"><i class="fas fa-robot"></i> ROCKS Assistant</div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chat-message bot">¡Hola! 👋 Soy tu asistente virtual de ROCKSpizza. ¿En qué te puedo colaborar hoy?</div>
+        </div>
+        <div class="chatbot-options">
+            <button class="chat-option" onclick="askQuestion('menu')" type="button">🍕 Ver menú</button>
+            <button class="chat-option" onclick="askQuestion('horario')" type="button">🕐 Horarios</button>
+            <button class="chat-option" onclick="askQuestion('pago')" type="button">💳 Métodos de pago</button>
+            <button class="chat-option" onclick="askQuestion('tiempo')" type="button">⏱️ Tiempo de entrega</button>
+        </div>
+    </div>
+
+    <!-- CHATBOT POPUP MÁS GRANDE -->
+    <div class="chatbot-popup-overlay" id="chatbotPopup">
+        <div class="chatbot-popup">
+            <div class="popup-icon" id="popupIcon">🍕</div>
+            <div class="popup-title" id="popupTitle">Información</div>
+            <div class="popup-content" id="popupContent"></div>
+            <button class="popup-close" onclick="closePopup()" type="button">
+                <i class="fas fa-check"></i> ENTENDIDO
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin INVISIBLE -->
+    <div class="admin-panel">
+        <button class="admin-btn" onclick="openAdminSecurity()" type="button"><i class="fas fa-cog"></i></button>
+    </div>
+
+    <!-- Security Modal -->
+    <div class="modal-overlay" id="securityModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-shield-alt"></i> SEGURIDAD</h2>
+            <p style="color: #888; text-align: center; margin-bottom: 20px;">Acceso restringido</p>
+            <input type="password" id="adminPassword" placeholder="Ingresa la contraseña" style="width: 100%; padding: 15px; background: #000; border: 2px solid #333; border-radius: 10px; color: #fff; margin-bottom: 20px; font-size: 1.1rem; text-align: center;">
+            <button class="admin-btn-action" onclick="verifyAdmin()" type="button"><i class="fas fa-lock"></i> ACCEDER</button>
+            <button class="admin-btn-action secondary" onclick="closeSecurity()" type="button">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Main Admin Modal -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-cog"></i> PANEL DE ADMINISTRADOR</h2>
+            
+            <div class="admin-option">
+                <span>Estado del local</span>
+                <div class="toggle-switch" id="statusToggle" onclick="toggleStatus()"></div>
+            </div>
+
+            <div class="admin-option">
+                <span>Mostrar/Ocultar reseñas</span>
+                <div class="toggle-switch active" id="reviewsToggle" onclick="toggleReviews()"></div>
+            </div>
+
+            <button class="admin-btn-action edit-btn" onclick="openEditPizzas()" type="button">
+                <i class="fas fa-edit"></i> EDITAR PIZZAS (Fotos, Precios, Nombres)
+            </button>
+
+            <button class="admin-btn-action secondary" onclick="closeAdmin()" type="button">
+                <i class="fas fa-times"></i> CERRAR
+            </button>
+        </div>
+    </div>
+
+    <!-- Edit Pizzas Modal -->
+    <div class="modal-overlay" id="editPizzasModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2><i class="fas fa-edit"></i> EDITAR PIZZAS</h2>
+            <p style="color: #aaa; text-align: center; margin-bottom: 20px; font-size: 0.9rem;">
+                Cambia las URLs de las imágenes, nombres, precios e ingredientes. Los cambios se guardan en este dispositivo.
+            </p>
+            <div id="editFormsContainer"></div>
+            
+            <button class="admin-btn-action" onclick="savePizzas()" type="button">
+                <i class="fas fa-save"></i> GUARDAR CAMBIOS
+            </button>
+            <button class="admin-btn-action secondary" onclick="resetPizzas()" type="button">
+                <i class="fas fa-undo"></i> RESTAURAR VALORES ORIGINALES
+            </button>
+            <button class="admin-btn-action secondary" onclick="closeEditPizzas()" type="button">
+                <i class="fas fa-arrow-left"></i> VOLVER AL MENÚ
+            </button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        const ADMIN_PASSWORD = 'ROCKS2026';
+        const whatsappNumber = '573008150549';
+        
+        const defaultPizzas = {
+            mes: { name: 'ROCKS Deluxe', price: '$45.000', img: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&q=80', ingredients: 'Triple queso mozzarella, pepperoni importado, jamón premium, champiñones frescos, pimientos asados, cebolla caramelizada, salsa especial de la casa y albahaca fresca. ¡Una explosión de sabores!', description: 'Edición Especial Limitada - Solo este mes' },
+            p1: { name: 'Pepperoni Rock', price: '$35.000', img: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&q=80', ingredients: '<i class="fas fa-check" style="color: #ff0033;"></i> Doble pepperoni importado<br><i class="fas fa-check" style="color: #ff0033;"></i> Queso mozzarella premium<br><i class="fas fa-check" style="color: #ff0033;"></i> Salsa de la casa<br><i class="fas fa-check" style="color: #ff0033;"></i> Orégano fresco' },
+            p2: { name: 'Hawaiana VIP', price: '$38.000', img: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80', ingredients: '<i class="fas fa-check" style="color: #ff0033;"></i> Jamón premium<br><i class="fas fa-check" style="color: #ff0033;"></i> Piña caramelizada<br><i class="fas fa-check" style="color: #ff0033;"></i> Queso mozzarella<br><i class="fas fa-check" style="color: #ff0033;"></i> Toque de miel' },
+            p3: { name: 'Margarita Class', price: '$32.000', img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80', ingredients: '<i class="fas fa-check" style="color: #ff0033;"></i> Tomate fresco<br><i class="fas fa-check" style="color: #ff0033;"></i> Mozzarella di bufala<br><i class="fas fa-check" style="color: #ff0033;"></i> Albahaca fresca<br><i class="fas fa-check" style="color: #ff0033;"></i> Aceite de oliva extra virgen' }
+        };
+
+        let pizzas = JSON.parse(localStorage.getItem('rocksPizzasData')) || JSON.parse(JSON.stringify(defaultPizzas));
+
+        // SECURITY
+        document.addEventListener('contextmenu', e => { e.preventDefault(); showNotification('Acción no permitida'); });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault(); showNotification('Acción restringida');
+            }
+        });
+        
+        if (window.innerWidth > 768) {
+            setInterval(() => {
+                if (window.outerHeight - window.innerHeight > 200 || 
+                    window.outerWidth - window.innerWidth > 200) {
+                    document.body.innerHTML = '<div style="color: #ff0033; text-align: center; padding: 50px; font-size: 2rem;">Acceso denegado</div>';
+                }
+            }, 1000);
+        }
+
+        // TRIPLE CLICK PARA ADMIN
+        let clickCount = 0;
+        let clickTimer = null;
+        const header = document.getElementById('mainHeader');
+        
+        header.addEventListener('click', function() {
+            clickCount++;
+            
+            if (clickCount === 1) {
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 800);
+            } else if (clickCount === 3) {
+                clearTimeout(clickTimer);
+                clickCount = 0;
+                openAdminSecurity();
+            }
+        });
+
+        function applySavedData() {
+            document.getElementById('mesName').textContent = pizzas.mes.name;
+            document.getElementById('mesPrice').innerHTML = pizzas.mes.price + ' <span>COP</span>';
+            document.getElementById('mesImg').src = pizzas.mes.img;
+            document.getElementById('mesIngredients').textContent = pizzas.mes.ingredients;
+            document.getElementById('mesDesc').textContent = pizzas.mes.description;
+
+            ['p1', 'p2', 'p3'].forEach(id => {
+                document.getElementById(id + 'Name').textContent = pizzas[id].name;
+                document.getElementById(id + 'Price').innerHTML = pizzas[id].price + ' <span>COP</span>';
+                document.getElementById(id + 'Img').src = pizzas[id].img;
+                document.getElementById(id + 'Ingredients').innerHTML = pizzas[id].ingredients;
+            });
+        }
+
+        // CHATBOT - LEE PRECIOS ACTUALES DEL LOCALSTORAGE
+        function askQuestion(type) {
+            const messages = document.getElementById('chatbotMessages');
+            
+            const texts = { menu: '¿Cuál es el menú?', horario: '¿Cuáles son los horarios?', pago: '¿Qué métodos de pago aceptan?', tiempo: '¿Cuánto tarda la entrega?' };
+            messages.innerHTML += '<div class="chat-message user">' + texts[type] + '</div>';
+            
+            let response;
+            if (type === 'menu') {
+                // Construir menú con precios ACTUALES del localStorage
+                const menuText = `• ${pizzas.p1.name} - ${pizzas.p1.price}\n• ${pizzas.p2.name} - ${pizzas.p2.price}\n• ${pizzas.p3.name} - ${pizzas.p3.price}\n• ${pizzas.mes.name} (Pizza del Mes) - ${pizzas.mes.price}\n\n¡Todas son brutales! ¿Cuál quieres probar?`;
+                response = { icon: '🍕', title: 'Nuestro Menú', text: menuText };
+            } else {
+                const responses = {
+                    horario: { icon: '🕐', title: 'Horarios de Atención', text: 'Estamos abiertos todos los días de 4:00 PM a 10:00 PM.\n\n¡Perfecto para tu cena o reunión con amigos!' },
+                    pago: { icon: '💳', title: 'Métodos de Pago', text: 'Aceptamos:\n\n• Efectivo\n• Nequi\n• Daviplata\n• Transferencia bancaria\n\n¡Fácil y rápido!' },
+                    tiempo: { icon: '⏱️', title: 'Tiempo de Entrega', text: 'El tiempo promedio de entrega es de 25-30 minutos dentro del edificio.\n\n¡Llegamos calientitas a tu apartamento!' }
+                };
+                response = responses[type];
+            }
+            
+            document.getElementById('popupIcon').textContent = response.icon;
+            document.getElementById('popupTitle').textContent = response.title;
+            document.getElementById('popupContent').textContent = response.text;
+            document.getElementById('chatbotPopup').style.display = 'flex';
+            
+            setTimeout(() => {
+                messages.innerHTML += '<div class="chat-message bot">' + response.text.replace(/\n/g, '<br>') + '</div>';
+                messages.scrollTop = messages.scrollHeight;
+            }, 300);
+        }
+
+        function closePopup() {
+            document.getElementById('chatbotPopup').style.display = 'none';
+        }
+
+        function renderEditForms() {
+            let html = '';
+            const keys = ['mes', 'p1', 'p2', 'p3'];
+            const labels = { mes: '🏆 Pizza del Mes', p1: '🍕 Pizza 1', p2: '🍕 Pizza 2', p3: '🍕 Pizza 3' };
+            
+            keys.forEach(key => {
+                html += '<div class="edit-pizza-form"><h3>' + labels[key] + '</h3>';
+                html += '<div class="form-group"><label>URL de la Imagen:</label><input type="text" id="img-' + key + '" value="' + pizzas[key].img + '"></div>';
+                html += '<div class="form-group"><label>Nombre:</label><input type="text" id="name-' + key + '" value="' + pizzas[key].name + '"></div>';
+                html += '<div class="form-group"><label>Precio:</label><input type="text" id="price-' + key + '" value="' + pizzas[key].price + '"></div>';
+                html += '<div class="form-group"><label>Ingredientes / Descripción:</label><textarea id="ingredients-' + key + '">' + pizzas[key].ingredients.replace(/<[^>]*>?/gm, '') + '</textarea></div>';
+                if (key === 'mes') {
+                    html += '<div class="form-group"><label>Descripción corta:</label><input type="text" id="desc-' + key + '" value="' + pizzas[key].description + '"></div>';
+                }
+                html += '</div>';
+            });
+            document.getElementById('editFormsContainer').innerHTML = html;
+        }
+
+        function savePizzas() {
+            const keys = ['mes', 'p1', 'p2', 'p3'];
+            keys.forEach(key => {
+                pizzas[key].img = document.getElementById('img-' + key).value;
+                pizzas[key].name = document.getElementById('name-' + key).value;
+                pizzas[key].price = document.getElementById('price-' + key).value;
+                pizzas[key].ingredients = document.getElementById('ingredients-' + key).value;
+                if (key === 'mes') pizzas[key].description = document.getElementById('desc-' + key).value;
+            });
+            localStorage.setItem('rocksPizzasData', JSON.stringify(pizzas));
+            applySavedData();
+            showNotification('✅ Cambios guardados correctamente');
+            closeEditPizzas();
+        }
+
+        function resetPizzas() {
+            if (confirm('¿Estás seguro de restaurar los valores originales?')) {
+                localStorage.removeItem('rocksPizzasData');
+                pizzas = JSON.parse(JSON.stringify(defaultPizzas));
+                applySavedData();
+                renderEditForms();
+                showNotification('🔄 Valores originales restaurados');
+            }
+        }
+
+        function openAdminSecurity() {
+            document.getElementById('securityModal').style.display = 'flex';
+            document.getElementById('adminPassword').value = '';
+            setTimeout(() => document.getElementById('adminPassword').focus(), 100);
+        }
+        function closeSecurity() { document.getElementById('securityModal').style.display = 'none'; }
+        
+        function verifyAdmin() {
+            if (document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
+                closeSecurity();
+                document.getElementById('adminModal').style.display = 'flex';
+                showNotification('🔓 Acceso concedido');
+            } else {
+                showNotification('❌ Contraseña incorrecta');
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; }
+        function openEditPizzas() {
+            renderEditForms();
+            document.getElementById('adminModal').style.display = 'none';
+            document.getElementById('editPizzasModal').style.display = 'flex';
+        }
+        function closeEditPizzas() { document.getElementById('editPizzasModal').style.display = 'none'; }
+
+        function toggleStatus() {
+            const toggle = document.getElementById('statusToggle');
+            const statusBtn = document.getElementById('statusBtn');
+            toggle.classList.toggle('active');
+            if (toggle.classList.contains('active')) {
+                statusBtn.classList.remove('closed');
+                statusBtn.innerHTML = '<i class="fas fa-fire"></i> ABIERTO HOY 4PM - 10PM';
+            } else {
+                statusBtn.classList.add('closed');
+                statusBtn.innerHTML = '<i class="fas fa-moon"></i> CERRADO HOY';
+            }
+            localStorage.setItem('isOpen', toggle.classList.contains('active'));
+        }
+
+        function showReviews() {
+            const section = document.getElementById('reviewsSection');
+            section.style.display = section.style.display === 'none' || section.style.display === '' ? 'block' : 'none';
+            if (section.style.display === 'block') section.scrollIntoView({ behavior: 'smooth' });
+        }
+        function toggleReviews() {
+            const section = document.getElementById('reviewsSection');
+            const toggle = document.getElementById('reviewsToggle');
+            section.style.display = section.style.display === 'none' || section.style.display === '' ? 'block' : 'none';
+            toggle.classList.toggle('active');
+        }
+
+        function orderPizza(name) {
+            const url = 'https://wa.me/' + whatsappNumber + '?text=' + encodeURIComponent('Hola! Quiero pedir una ' + name + ' de ROCKSpizza.');
+            window.open(url, '_blank');
+            showNotification('📱 Abriendo WhatsApp...');
+        }
+
+        function trackOrder() {
+            const orderNum = document.getElementById('orderNumber').value.trim();
+            if (!orderNum) { showNotification('Ingresa un número de pedido'); return; }
+            document.getElementById('trackingNumber').textContent = orderNum;
+            document.getElementById('trackingStatus').style.display = 'block';
+            setTimeout(() => document.getElementById('step1').classList.add('active'), 500);
+            setTimeout(() => document.getElementById('step2').classList.add('active'), 1000);
+            if (Math.random() > 0.5) {
+                setTimeout(() => {
+                    document.getElementById('step3').classList.add('active', 'completed');
+                    document.getElementById('text3').style.color = '#00ff00';
+                    document.getElementById('estimatedTime').textContent = 'Tu pedido va en camino. Llegará en 5-10 minutos';
+                }, 2000);
+            }
+            document.getElementById('trackingStatus').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleChatbot() {
+            const w = document.getElementById('chatbotWindow');
+            w.style.display = w.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function showNotification(msg) {
+            const n = document.getElementById('notification');
+            n.textContent = msg;
+            n.style.display = 'block';
+            setTimeout(() => n.style.display = 'none', 3000);
+        }
+
+        window.onload = function() {
+            applySavedData();
+            const hour = new Date().getHours();
+            const btn = document.getElementById('statusBtn');
+            if (hour < 16 || hour >= 22) {
+                btn.classList.add('closed');
+                btn.innerHTML = '<i class="fas fa-moon"></i> CERRADO - Abrimos a 4PM';
+            }
+            const isOpen = localStorage.getItem('isOpen');
+            if (isOpen === 'true') document.getElementById('statusToggle').classList.add('active');
+        };
+
+        window.onclick = function(e) {
+            if (e.target.classList.contains('modal-overlay')) e.target.style.display = 'none';
+            if (e.target.id === 'chatbotPopup') closePopup();
+        };
+        document.addEventListener('dragstart', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
+    </script>
+</body>
+</html>
+
